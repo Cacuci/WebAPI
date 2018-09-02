@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
             _userRepository = userRepository;
         }
 
-        // GET api/values
+        // GET api/valuese
         [HttpGet]
         public IEnumerable<Users> GetAll() => _userRepository.GetAll();
 
