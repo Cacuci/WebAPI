@@ -18,7 +18,7 @@ namespace WebAPI.Repository
             _context.User.Add(user);
             _context.SaveChanges();
         }
-        public Users Find(long id)
+        public Users Find(int id)
         {
             return _context.User.FirstOrDefault(c => c.UserID == id);
         }
@@ -28,7 +28,7 @@ namespace WebAPI.Repository
             return _context.User.ToList();         
         }
 
-        public void Remove(long id)
+        public void Remove(int id)
         {
             var user = _context.User.Find(id);            
             _context.User.Remove(user);
@@ -38,6 +38,7 @@ namespace WebAPI.Repository
         public void Update(Users user)
         {
             _context.User.Update(user);
+            _context.SaveChanges();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace WebAPI.Repository
         IEnumerable<Users> GetAll();         
          void Add(Users user);         
          void Update(Users id);
-         void Remove(long id);
-         Users Find(long id);         
+         void Remove(int id);
+         Users Find(int id);         
     }
 }

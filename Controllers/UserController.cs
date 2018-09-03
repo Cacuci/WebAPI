@@ -18,13 +18,13 @@ namespace WebAPI.Controllers
             _userRepository = userRepository;
         }
 
-        // GET api/values
+        // GET api/valuese
         [HttpGet]
         public IEnumerable<Users> GetAll() => _userRepository.GetAll();
 
         // GET api/values/
         [HttpGet("{id}", Name="GetUser")]
-        public IActionResult Get(long id)
+        public IActionResult GetById(int id)
         {
             var user = _userRepository.Find(id);
 
@@ -34,32 +34,58 @@ namespace WebAPI.Controllers
             }
             
             return new ObjectResult(user);
-        }
+        }    
 
-        // POST api/values
         [HttpPost]
-        public void ADD(string name, string email)
+        public IActionResult Create([FromBody] Users user)
         {
-            Users user = new Users();
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
-            user.Name = name;
-            user.Email = email;
+            _userRepository.Add(user);
 
-            _userRepository.Add(user);            
-        }
-        
-        // PUT api/values/
-        [HttpPut]
-        public void Put(Users user)
-        {
-            _userRepository.Update(user);
+            return CreatedAtRoute("GetUser", new { id = user.UserID}, user);
         }
 
-       // DELETE api/values/
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Users user)
+        {
+            if (user == null || user.UserID != id)
+            {
+                return BadRequest();
+            }
+
+            var _user = _userRepository.Find(id);
+
+            if (_user == null)
+            {
+                return NotFound();
+            }
+
+            _user.Name = user.Name;
+            _user.Email = user.Email;
+            _user.Password = user.Password;
+
+            _userRepository.Update(_user);
+
+            return new NoContentResult();
+        }
+
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public IActionResult Delete(int id)
         {
+            var user = _userRepository.Find(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             _userRepository.Remove(id);
+
+            return new NoContentResult();
         }
     }
 }
