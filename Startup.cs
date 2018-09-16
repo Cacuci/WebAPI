@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 using WebAPI.Controllers.DBContext;
 using WebAPI.Controllers.Models;
 using WebAPI.Repository;
@@ -31,6 +32,16 @@ namespace WebAPI
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddMvc();
+
+            //Register Swagger definition with one or more documentations
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1",
+                 new Info {Title = "APIUser",
+                           Version = "v1",
+                           Contact = new Contact {Name="Rafael Caçuci", Email = "rafael@yahoo.com.br", Url = "https://github.com/Cacuci" }
+                 });                
+            });          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +53,13 @@ namespace WebAPI
             }
 
             app.UseMvc();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIUser V1");                
+            });
         }
     }
 }
